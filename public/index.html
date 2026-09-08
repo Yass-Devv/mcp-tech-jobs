@@ -1,0 +1,681 @@
+<title>OneTwoFreelance</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#fdf8f0;
+    --surface:#ffffff;
+    --surface-2:#f6ecdc;
+    --ink:#2b1b10;
+    --ink-muted:#7a6552;
+    --ink-faint:#a6927b;
+    --border:#efe2c9;
+    --brand:#c1572b;
+    --brand-soft:#f3ded0;
+    --gold:#c9860f;
+    --gold-soft:#f7e6bf;
+    --plum:#8a4a52;
+    --plum-soft:#f1dfe0;
+    --hero-bg:#c1572b;
+    --hero-ink:#fff8ee;
+    --hero-glyph:#f3b354;
+    --hero-accent:#3a1608;
+    --shadow: 0 1px 2px rgba(43,27,16,.05), 0 12px 30px -16px rgba(43,27,16,.16);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c130c; --surface:#241a10; --surface-2:#2c2013;
+      --ink:#f3e9dc; --ink-muted:#b9a68e; --ink-faint:#7d6c58;
+      --border:#3a2c1c;
+      --brand:#f0855a; --brand-soft:#3a2013;
+      --gold:#ffc46b; --gold-soft:#3a2c10;
+      --plum:#d9a0a8; --plum-soft:#3a2028;
+      --hero-bg:#472313; --hero-ink:#fff8ee; --hero-glyph:#ffcf8a; --hero-accent:#ffcf8a;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 34px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c130c; --surface:#241a10; --surface-2:#2c2013;
+    --ink:#f3e9dc; --ink-muted:#b9a68e; --ink-faint:#7d6c58;
+    --border:#3a2c1c;
+    --brand:#f0855a; --brand-soft:#3a2013;
+    --gold:#ffc46b; --gold-soft:#3a2c10;
+    --plum:#d9a0a8; --plum-soft:#3a2028;
+    --hero-bg:#472313; --hero-ink:#fff8ee; --hero-glyph:#ffcf8a; --hero-accent:#ffcf8a;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 34px -16px rgba(0,0,0,.7);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Public Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .display{ font-family:"Big Shoulders Display", "Arial Narrow", sans-serif; font-weight:800; }
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, "SF Mono", monospace; }
+  ::selection{ background:var(--gold-soft); }
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--brand); outline-offset:2px; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:30;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px clamp(20px,4vw,48px);
+    background:color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{ display:flex; align-items:center; gap:11px; text-decoration:none; }
+  .brand .mark{ display:block; width:32px; height:32px; transform:rotate(-4deg); transition:transform .25s ease; }
+  .brand:hover .mark{ transform:rotate(3deg) scale(1.05); }
+  .brand .word{ font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:21px; letter-spacing:-.01em; }
+  .brand .word b{ color:var(--brand); font-weight:900; }
+  .live{
+    display:flex; align-items:center; gap:7px;
+    font-family:"IBM Plex Mono", monospace; font-size:11.5px; color:var(--ink-muted);
+    border:1px solid var(--border); border-radius:20px; padding:6px 13px;
+  }
+  .live .dot{ width:6px; height:6px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 3px var(--brand-soft); }
+  .live .dot.pulse{ animation:pulse 2.2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  @media (prefers-reduced-motion: reduce){ .live .dot.pulse{ animation:none; } }
+  .nav-right{ display:flex; align-items:center; gap:10px; }
+  .theme-toggle{
+    position:relative; width:34px; height:34px; flex:none;
+    border:1px solid var(--border); border-radius:9px; background:var(--surface);
+    color:var(--ink-muted); display:flex; align-items:center; justify-content:center;
+  }
+  .theme-toggle:hover{ color:var(--ink); border-color:color-mix(in srgb, var(--brand) 40%, var(--border)); }
+  .theme-toggle svg{ position:absolute; transition:opacity .3s ease, transform .3s ease; }
+  .theme-toggle .icon-moon{ opacity:0; transform:rotate(-90deg) scale(.5); }
+  .theme-toggle .icon-sun{ opacity:1; transform:rotate(0deg) scale(1); }
+  :root[data-theme="dark"] .theme-toggle .icon-sun{ opacity:0; transform:rotate(90deg) scale(.5); }
+  :root[data-theme="dark"] .theme-toggle .icon-moon{ opacity:1; transform:rotate(0deg) scale(1); }
+  @media (prefers-reduced-motion: reduce){ .theme-toggle svg{ transition:none; } }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:var(--hero-bg); color:var(--hero-ink);
+    padding:76px clamp(20px,4vw,48px) 0;
+  }
+  .hero-canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
+  .hero-inner{ position:relative; max-width:900px; margin:0 auto; text-align:left; }
+  .hero .eyebrow{
+    font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--hero-accent); margin:0 0 18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero .eyebrow::before{ content:""; width:26px; height:1px; background:var(--hero-accent); }
+  .hero h1{
+    font-family:"Big Shoulders Display", sans-serif; font-weight:900;
+    font-size:clamp(48px,9vw,104px); line-height:.92; letter-spacing:-.02em;
+    margin:0 0 22px; text-wrap:balance;
+  }
+  .hero h1 .accent{ color:var(--hero-accent); }
+  .hero .lede{
+    font-size:17px; line-height:1.6; color:color-mix(in srgb, var(--hero-ink) 88%, transparent);
+    max-width:52ch; margin:0 0 30px;
+  }
+  .hero-actions{ display:flex; flex-wrap:wrap; gap:12px; padding-bottom:56px; }
+  .btn{
+    font-family:"IBM Plex Mono", monospace; font-size:12.5px; font-weight:600;
+    border-radius:9px; padding:12px 20px; display:inline-flex; align-items:center; gap:9px;
+    text-decoration:none; border:1px solid transparent; letter-spacing:.01em;
+  }
+  .btn-gold{ background:var(--gold); color:#231603; }
+  .btn-outline{ border-color:color-mix(in srgb, var(--hero-ink) 35%, transparent); color:var(--hero-ink); }
+
+  /* ---------- marquee ---------- */
+  .marquee-wrap{
+    background:var(--surface-2); border-bottom:1px solid var(--border);
+    overflow:hidden; padding:13px 0;
+  }
+  .marquee{ display:flex; width:max-content; animation:scroll 32s linear infinite; }
+  .marquee-wrap:hover .marquee{ animation-play-state:paused; }
+  @media (prefers-reduced-motion: reduce){ .marquee{ animation:none; flex-wrap:wrap; } }
+  @keyframes scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .marquee span{
+    font-family:"IBM Plex Mono", monospace; font-size:12.5px; color:var(--ink-faint);
+    padding:0 22px; white-space:nowrap; display:flex; align-items:center; gap:22px;
+  }
+  .marquee span::after{ content:"·"; color:var(--ink-faint); }
+
+  /* ---------- how it works ---------- */
+  .steps{
+    max-width:980px; margin:0 auto; padding:64px clamp(20px,4vw,48px) 8px;
+    display:grid; grid-template-columns:1fr 1fr; gap:28px;
+  }
+  @media (max-width:680px){ .steps{ grid-template-columns:1fr; } }
+  .step{ position:relative; padding-top:6px; }
+  .step .big-num{
+    font-family:"Big Shoulders Display", sans-serif; font-weight:900; font-size:76px;
+    line-height:1; color:var(--brand-soft); margin:0 0 -14px;
+  }
+  .step h3{ font-size:19px; font-weight:800; margin:0 0 8px; letter-spacing:-.01em; }
+  .step p{ font-size:14px; line-height:1.6; color:var(--ink-muted); margin:0; max-width:42ch; }
+
+  /* ---------- banner ---------- */
+  .banner{ max-width:980px; margin:44px auto 0; padding:0 clamp(20px,4vw,48px); }
+  .banner-inner{
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 40%, var(--border));
+    border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.55; color:var(--ink);
+  }
+  .banner-inner svg{ flex:none; color:var(--gold); margin-top:1px; }
+  .banner-inner strong{ font-weight:700; }
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    max-width:980px; margin:32px auto 0; padding:0 clamp(20px,4vw,48px);
+  }
+  .searchbar{
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface); border:1px solid var(--border); border-radius:11px;
+    padding:4px 4px 4px 16px; box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  .searchbar svg{ flex:none; color:var(--ink-faint); }
+  .searchbar input{
+    border:0; background:transparent; outline:none; flex:1;
+    font-family:inherit; font-size:15px; color:var(--ink); padding:12px 0;
+  }
+  .searchbar input::placeholder{ color:var(--ink-faint); }
+  .searchbar .kbd{
+    font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--ink-faint);
+    border:1px solid var(--border); border-radius:5px; padding:2px 6px; margin-right:6px;
+  }
+  .filters{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; }
+  .fgroup{ display:flex; gap:6px; flex-wrap:wrap; }
+  .pill{
+    font-family:"IBM Plex Mono", monospace; font-size:12px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-muted);
+    border-radius:20px; padding:7px 13px; display:flex; align-items:center; gap:6px;
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .pill:hover{ color:var(--ink); }
+  .pill[aria-pressed="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  .pill .n{ opacity:.6; }
+  .pill .swatch{ width:7px; height:7px; border-radius:50%; }
+  .spacer{ flex:1; }
+  .count{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; color:var(--ink-faint); }
+
+  /* ---------- results ---------- */
+  .results{ max-width:980px; margin:20px auto 90px; padding:0 clamp(20px,4vw,48px); }
+  ul.joblist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+
+  .job{
+    display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:start;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px 18px; cursor:pointer;
+    transition:border-color .15s, transform .12s, box-shadow .15s;
+  }
+  .job:hover{ border-color:color-mix(in srgb, var(--brand) 45%, var(--border)); box-shadow:var(--shadow); transform:translateY(-1px); }
+  .job:active{ transform:scale(.997); }
+
+  .fav-btn{
+    background:none; border:1px solid var(--border); border-radius:8px;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+    color:var(--ink-faint); flex:none;
+  }
+  .fav-btn[aria-pressed="true"]{ color:var(--gold); border-color:color-mix(in srgb, var(--gold) 45%, var(--border)); background:var(--gold-soft); }
+  .fav-btn svg{ width:16px; height:16px; }
+
+  .job-title{ font-size:15.5px; font-weight:700; margin:0 0 3px; letter-spacing:-.005em; }
+  .job-meta{
+    font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--ink-muted);
+    margin:0 0 9px; display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center;
+  }
+  .job-meta .sep{ color:var(--ink-faint); }
+  .job-excerpt{ font-size:13.5px; line-height:1.55; color:var(--ink-muted); margin:0; max-width:68ch; }
+
+  .badge{
+    font-family:"IBM Plex Mono", monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+    padding:2.5px 8px; border-radius:5px; display:inline-flex; align-items:center; gap:5px; font-weight:700;
+  }
+  .badge.freelance{ background:var(--brand-soft); color:var(--brand); }
+  .badge.contract{ background:var(--plum-soft); color:var(--plum); }
+  .badge .dot{ width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .src-tag{ color:var(--ink-faint); }
+
+  .job-go{
+    align-self:center; flex:none; color:var(--ink-faint); width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center; border-radius:8px;
+  }
+  .job:hover .job-go{ color:var(--brand); }
+
+  .empty{ text-align:center; padding:64px 20px; color:var(--ink-muted); border:1px dashed var(--border); border-radius:var(--radius); }
+  .empty svg{ color:var(--ink-faint); margin-bottom:14px; }
+  .empty p{ margin:4px 0 0; font-size:13.5px; }
+  .empty h3{ font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:22px; margin:0; color:var(--ink); }
+
+  /* ---------- modal ---------- */
+  dialog{
+    border:none; border-radius:16px; padding:0; width:min(640px, 92vw);
+    max-height:min(720px, 86vh); background:var(--surface); color:var(--ink);
+    box-shadow:0 24px 64px -20px rgba(0,0,0,.4);
+  }
+  dialog::backdrop{ background:rgba(28,19,12,.5); backdrop-filter:blur(2px); }
+  .modal-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:22px 24px 16px; border-bottom:1px solid var(--border); }
+  .modal-head h2{ font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:26px; margin:0 0 8px; line-height:1.1; }
+  .modal-close{ background:none; border:1px solid var(--border); border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:var(--ink-muted); flex:none; }
+  .modal-body{ padding:18px 24px 8px; overflow-y:auto; max-height:calc(min(720px,86vh) - 148px); }
+  .modal-body p{ font-size:14px; line-height:1.7; color:var(--ink-muted); white-space:pre-line; margin:0 0 14px; }
+  .modal-foot{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 24px 22px; }
+  .btn-primary{ background:var(--ink); color:var(--bg); }
+  .btn-ghost{ border-color:var(--border); color:var(--ink-muted); background:transparent; }
+
+  footer{
+    max-width:980px; margin:0 auto; padding:24px clamp(20px,4vw,48px) 56px;
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px;
+    font-family:"IBM Plex Mono", monospace; font-size:11.5px; color:var(--ink-faint);
+    border-top:1px solid var(--border);
+  }
+
+  @media (max-width:600px){
+    .job{ grid-template-columns:auto 1fr; }
+    .job-go{ display:none; }
+  }
+</style>
+
+<script>
+(function(){
+  try{
+    var stored = localStorage.getItem("onetwofreelance:theme");
+    var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  }catch(e){}
+})();
+</script>
+
+<nav>
+  <a class="brand" href="#top">
+    <svg class="mark" viewBox="0 0 44 44" role="img" aria-label="OneTwoFreelance">
+      <rect x="2" y="2" width="40" height="40" rx="13" fill="var(--brand)"/>
+      <text x="14" y="30" text-anchor="middle" font-family="'Big Shoulders Display', sans-serif" font-weight="900" font-size="21" fill="var(--hero-ink)">1</text>
+      <path d="M21,22 L27,22 M24,19 L27,22 L24,25" stroke="var(--gold)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="34" y="30" text-anchor="middle" font-family="'Big Shoulders Display', sans-serif" font-weight="900" font-size="21" fill="var(--hero-ink)">2</text>
+    </svg>
+    <span class="word">One<b>Two</b>Freelance</span>
+  </a>
+  <div class="nav-right">
+    <div class="live"><span class="dot pulse"></span><span id="live-count">47</span> offres suivies</div>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer en thème clair ou sombre">
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<section class="hero" id="top">
+  <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <p class="eyebrow">EURES + Arbeitnow, agrégés en direct</p>
+    <h1>Freelance,<br>en <span class="accent">deux</span> temps.</h1>
+    <p class="lede">
+      OneTwoFreelance surveille les répertoires publics d'offres, élimine les doublons
+      et vous livre une seule liste propre — plus besoin d'ouvrir dix onglets.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#results">Voir les %%JOBS_COUNT%% offres ↓</a>
+      <a class="btn btn-outline" href="#how">Comment ça marche</a>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee mono" id="marquee"></div>
+</div>
+
+<section class="steps" id="how">
+  <div class="step">
+    <p class="big-num display">01</p>
+    <h3>On rassemble</h3>
+    <p>Deux sources publiques interrogées, validées et standardisées vers un même format — chaque annonce passe par le même contrôle avant d'atterrir ici.</p>
+  </div>
+  <div class="step">
+    <p class="big-num display">02</p>
+    <h3>Vous choisissez</h3>
+    <p>Cherchez, filtrez par type de contrat ou de source, mettez de côté ce qui vous intéresse. Zéro doublon, zéro annonce fantôme.</p>
+  </div>
+</section>
+
+<div class="banner">
+  <div class="banner-inner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    <span><strong>Données brutes.</strong> Ce lot n'a pas encore été trié par pertinence sectorielle — cette classification arrive avec l'enrichissement LLM (Partie 2). Tout ce qui est <span class="mono">selfemployed</span> ou <span class="mono">contract</span> côté source s'affiche ici tel quel.</span>
+  </div>
+</div>
+
+<div class="toolbar" id="results">
+  <label class="searchbar">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" type="text" placeholder="Chercher un intitulé, une entreprise, un pays…" autocomplete="off">
+    <span class="kbd">/</span>
+  </label>
+  <div class="filters">
+    <div class="fgroup" id="filter-type" role="group" aria-label="Type de contrat"></div>
+    <div class="fgroup" id="filter-source" role="group" aria-label="Source"></div>
+    <button class="pill" id="filter-fav" aria-pressed="false">★ Favoris</button>
+    <div class="spacer"></div>
+    <span class="count"><span id="result-count">47</span> résultat(s)</span>
+  </div>
+</div>
+
+<main class="results">
+  <ul class="joblist" id="joblist"></ul>
+  <div class="empty" id="empty" hidden>
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <h3>Aucune offre ne correspond</h3>
+    <p>Essayez un autre mot-clé ou réinitialisez les filtres.</p>
+  </div>
+</main>
+
+<dialog id="job-modal">
+  <div class="modal-head">
+    <div>
+      <h2 id="modal-title"></h2>
+      <div class="job-meta" id="modal-meta"></div>
+    </div>
+    <button class="modal-close" id="modal-close" aria-label="Fermer">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body"><p id="modal-desc"></p></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="modal-fav">☆ Sauvegarder</button>
+    <a class="btn btn-primary" id="modal-link" href="#" target="_blank" rel="noopener noreferrer">Voir l'offre originale ↗</a>
+  </div>
+</dialog>
+
+<footer>
+  <span>src/fetch_raw.ts · npx tsx src/fetch_raw.ts</span>
+  <span>data/raw_jobs.json · TypeScript · Zod · Axios</span>
+</footer>
+
+<script type="application/json" id="jobs-data">%%JOBS_JSON%%</script>
+<script>
+(function(){
+  "use strict";
+
+  var themeBtn = document.getElementById("theme-toggle");
+  themeBtn.addEventListener("click", function(){
+    var current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try{ localStorage.setItem("onetwofreelance:theme", next); }catch(e){}
+  });
+
+  var jobs = JSON.parse(document.getElementById("jobs-data").textContent);
+
+  var FAV_KEY = "onetwofreelance:favorites";
+  function loadFavs(){
+    try{
+      var raw = localStorage.getItem(FAV_KEY);
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    }catch(e){ return new Set(); }
+  }
+  function saveFavs(set){
+    try{ localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); }catch(e){}
+  }
+  var favorites = loadFavs();
+
+  function stripHtml(html){
+    var withBreaks = html
+      .replace(/<\/(p|li|div|h[1-6])>/gi, "\n")
+      .replace(/<br\s*\/?>/gi, "\n");
+    var doc = new DOMParser().parseFromString(withBreaks, "text/html");
+    var text = doc.body.textContent || "";
+    return text.replace(/\n{3,}/g, "\n\n").replace(/[ \t]+\n/g, "\n").trim();
+  }
+
+  jobs.forEach(function(j){
+    j._plain = stripHtml(j.description);
+    j._excerpt = j._plain.replace(/\n+/g, " ").slice(0, 170);
+    if (j._plain.length > 170) j._excerpt += "…";
+  });
+
+  var state = { q:"", type:"all", source:"all", favOnly:false };
+  var typeLabels = { all:"Tous", freelance:"Freelance", contract:"Contract" };
+  var sourceLabels = { all:"Toutes sources", EURES:"EURES", Arbeitnow:"Arbeitnow" };
+
+  function counts(field){
+    var c = {};
+    jobs.forEach(function(j){ c[j[field]] = (c[j[field]]||0)+1; });
+    return c;
+  }
+
+  function renderFilterGroup(el, field, labels, current, onPick){
+    var c = counts(field);
+    var total = jobs.length;
+    el.innerHTML = "";
+    Object.keys(labels).forEach(function(key){
+      var n = key === "all" ? total : (c[key]||0);
+      var btn = document.createElement("button");
+      btn.className = "pill";
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(key === current));
+      if (field === "contract_type" && key !== "all"){
+        var sw = document.createElement("span");
+        sw.className = "swatch";
+        sw.style.background = key === "freelance" ? "var(--brand)" : "var(--plum)";
+        btn.appendChild(sw);
+      }
+      var label = document.createElement("span");
+      label.textContent = labels[key];
+      btn.appendChild(label);
+      var count = document.createElement("span");
+      count.className = "n";
+      count.textContent = "(" + n + ")";
+      btn.appendChild(count);
+      btn.addEventListener("click", function(){ onPick(key); });
+      el.appendChild(btn);
+    });
+  }
+
+  function badgeHtml(job){
+    var dot = job.contract_type === "freelance" ? "freelance" : "contract";
+    return '<span class="badge ' + dot + '"><span class="dot"></span>' + typeLabels[job.contract_type] + '</span>' +
+      '<span class="sep">·</span><span class="src-tag">' + job.source + '</span>';
+  }
+
+  function matches(job){
+    if (state.type !== "all" && job.contract_type !== state.type) return false;
+    if (state.source !== "all" && job.source !== state.source) return false;
+    if (state.favOnly && !favorites.has(job.id)) return false;
+    if (state.q){
+      var q = state.q.toLowerCase();
+      var hay = (job.title + " " + job.company + " " + job.location).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  }
+
+  var listEl = document.getElementById("joblist");
+  var emptyEl = document.getElementById("empty");
+  var resultCountEl = document.getElementById("result-count");
+
+  function render(){
+    var visible = jobs.filter(matches);
+    resultCountEl.textContent = String(visible.length);
+    listEl.innerHTML = "";
+    emptyEl.hidden = visible.length !== 0;
+
+    visible.forEach(function(job){
+      var li = document.createElement("li");
+      li.className = "job";
+      li.tabIndex = 0;
+      li.setAttribute("role","button");
+      li.setAttribute("aria-label", "Voir le détail : " + job.title);
+
+      var favBtn = document.createElement("button");
+      favBtn.className = "fav-btn";
+      favBtn.type = "button";
+      var isFav = favorites.has(job.id);
+      favBtn.setAttribute("aria-pressed", String(isFav));
+      favBtn.setAttribute("aria-label", isFav ? "Retirer des favoris" : "Ajouter aux favoris");
+      favBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="' + (isFav ? "currentColor" : "none") + '" stroke="currentColor" stroke-width="1.8"><path d="M12 17.3 6.2 20.5l1.1-6.5-4.7-4.6 6.5-1L12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5Z"/></svg>';
+      favBtn.addEventListener("click", function(e){
+        e.stopPropagation();
+        if (favorites.has(job.id)) favorites.delete(job.id); else favorites.add(job.id);
+        saveFavs(favorites);
+        render();
+      });
+
+      var mid = document.createElement("div");
+      var meta = job.company + '<span class="sep">·</span>' + job.location + '<span class="sep">·</span>' + badgeHtml(job);
+      mid.innerHTML =
+        '<p class="job-title"></p>' +
+        '<p class="job-meta">' + meta + '</p>' +
+        '<p class="job-excerpt"></p>';
+      mid.querySelector(".job-title").textContent = job.title;
+      mid.querySelector(".job-excerpt").textContent = job._excerpt;
+
+      var go = document.createElement("span");
+      go.className = "job-go";
+      go.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>';
+
+      li.appendChild(favBtn);
+      li.appendChild(mid);
+      li.appendChild(go);
+
+      li.addEventListener("click", function(){ openModal(job); });
+      li.addEventListener("keydown", function(e){
+        if (e.key === "Enter" || e.key === " "){ e.preventDefault(); openModal(job); }
+      });
+
+      listEl.appendChild(li);
+    });
+  }
+
+  var modal = document.getElementById("job-modal");
+  var modalTitle = document.getElementById("modal-title");
+  var modalMeta = document.getElementById("modal-meta");
+  var modalDesc = document.getElementById("modal-desc");
+  var modalLink = document.getElementById("modal-link");
+  var modalFav = document.getElementById("modal-fav");
+  var currentJob = null;
+
+  function openModal(job){
+    currentJob = job;
+    modalTitle.textContent = job.title;
+    modalMeta.innerHTML = job.company + '<span class="sep">·</span>' + job.location + '<span class="sep">·</span>' + badgeHtml(job);
+    modalDesc.textContent = job._plain;
+    modalLink.href = job.url;
+    syncModalFav();
+    modal.showModal();
+  }
+  function syncModalFav(){
+    var isFav = currentJob && favorites.has(currentJob.id);
+    modalFav.textContent = isFav ? "★ Sauvegardé" : "☆ Sauvegarder";
+  }
+  modalFav.addEventListener("click", function(){
+    if (!currentJob) return;
+    if (favorites.has(currentJob.id)) favorites.delete(currentJob.id); else favorites.add(currentJob.id);
+    saveFavs(favorites);
+    syncModalFav();
+    render();
+  });
+  document.getElementById("modal-close").addEventListener("click", function(){ modal.close(); });
+  modal.addEventListener("click", function(e){ if (e.target === modal) modal.close(); });
+
+  document.getElementById("search").addEventListener("input", function(e){
+    state.q = e.target.value;
+    render();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "/" && document.activeElement.id !== "search" && !modal.open){
+      e.preventDefault();
+      document.getElementById("search").focus();
+    }
+  });
+
+  var favToggle = document.getElementById("filter-fav");
+  favToggle.addEventListener("click", function(){
+    state.favOnly = !state.favOnly;
+    favToggle.setAttribute("aria-pressed", String(state.favOnly));
+    render();
+  });
+
+  function refreshFilters(){
+    renderFilterGroup(document.getElementById("filter-type"), "contract_type", typeLabels, state.type, function(key){
+      state.type = key; refreshFilters(); render();
+    });
+    renderFilterGroup(document.getElementById("filter-source"), "source", sourceLabels, state.source, function(key){
+      state.source = key; refreshFilters(); render();
+    });
+  }
+
+  document.getElementById("live-count").textContent = String(jobs.length);
+  refreshFilters();
+  render();
+
+  // ---------- marquee: real company names ----------
+  var companies = Array.from(new Set(jobs.map(function(j){ return j.company; })));
+  var marqueeEl = document.getElementById("marquee");
+  var track = companies.concat(companies).map(function(c){
+    var span = document.createElement("span");
+    span.textContent = c;
+    return span;
+  });
+  track.forEach(function(el){ marqueeEl.appendChild(el); });
+
+  // ---------- hero canvas: drifting "1" / "2" glyphs ----------
+  var canvas = document.getElementById("hero-canvas");
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ctx = canvas.getContext && canvas.getContext("2d");
+  if (ctx){
+    var glyphs = [];
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize(){
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed(rect.width, rect.height);
+    }
+    function seed(w, h){
+      glyphs = [];
+      var count = Math.max(10, Math.floor((w * h) / 42000));
+      for (var i = 0; i < count; i++){
+        glyphs.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          s: 28 + Math.random() * 46,
+          v: Math.random() > 0.5 ? "1" : "2",
+          speed: 6 + Math.random() * 10,
+          phase: Math.random() * Math.PI * 2,
+          op: 0.06 + Math.random() * 0.1
+        });
+      }
+    }
+    function draw(t){
+      var w = canvas.width / dpr, h = canvas.height / dpr;
+      ctx.clearRect(0, 0, w, h);
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      var style = getComputedStyle(document.documentElement);
+      var color = style.getPropertyValue("--hero-glyph").trim() || "#f3b354";
+      glyphs.forEach(function(g){
+        var dy = Math.sin(t / 1400 + g.phase) * g.speed;
+        ctx.font = "800 " + g.s + "px 'Big Shoulders Display', sans-serif";
+        ctx.fillStyle = color;
+        ctx.globalAlpha = g.op;
+        ctx.fillText(g.v, g.x, g.y + dy);
+      });
+      ctx.globalAlpha = 1;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    if (reduceMotion){
+      draw(0);
+    } else {
+      (function loop(t){ draw(t); requestAnimationFrame(loop); })(0);
+    }
+  }
+})();
+</script>
