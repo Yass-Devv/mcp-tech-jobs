@@ -156,6 +156,9 @@
 
   /* ---------- banner ---------- */
   .banner{ max-width:980px; margin:32px auto 0; padding:0 clamp(20px,4vw,48px); }
+  @media (min-width:1100px){
+    .banner, .toolbar, .results{ max-width:min(1560px, 94vw); }
+  }
   .banner-inner{
     display:flex; gap:12px; align-items:center;
     background:var(--teal-soft); border:1px solid color-mix(in srgb, var(--teal) 40%, var(--border));
@@ -168,26 +171,50 @@
   .toolbar{
     max-width:980px; margin:28px auto 0; padding:0 clamp(20px,4vw,48px);
   }
+  .toolbar-row{ display:flex; align-items:center; gap:10px; }
   .searchbar{
-    display:flex; align-items:center; gap:10px;
+    flex:1; display:flex; align-items:center; gap:10px;
     background:var(--surface); border:1px solid var(--border); border-radius:11px;
-    padding:4px 4px 4px 16px; box-shadow:var(--shadow); margin-bottom:16px;
+    padding:4px 4px 4px 16px; box-shadow:var(--shadow);
   }
   .searchbar svg{ flex:none; color:var(--ink-faint); }
   .searchbar input{
     border:0; background:transparent; outline:none; flex:1;
-    font-family:inherit; font-size:15px; color:var(--ink); padding:12px 0;
+    font-family:inherit; font-size:15.5px; color:var(--ink); padding:13px 0;
   }
   .searchbar input::placeholder{ color:var(--ink-faint); }
   .searchbar .kbd{
     font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--ink-faint);
     border:1px solid var(--border); border-radius:5px; padding:2px 6px; margin-right:6px;
   }
-  .filters{ display:flex; flex-direction:column; gap:10px; }
+  .filter-toggle{
+    position:relative; flex:none; display:flex; align-items:center; gap:8px;
+    height:100%; padding:13px 16px;
+    font-family:"IBM Plex Mono", monospace; font-size:13px; font-weight:600;
+    background:var(--surface); border:1px solid var(--border); border-radius:11px;
+    color:var(--ink-muted); box-shadow:var(--shadow);
+  }
+  .filter-toggle:hover{ color:var(--ink); border-color:color-mix(in srgb, var(--brand) 40%, var(--border)); }
+  .filter-toggle[aria-expanded="true"]{ color:var(--ink); border-color:var(--ink); }
+  .filter-toggle .chevron{ transition:transform .2s ease; }
+  .filter-toggle[aria-expanded="true"] .chevron{ transform:rotate(180deg); }
+  .filter-badge{
+    display:flex; align-items:center; justify-content:center;
+    min-width:18px; height:18px; padding:0 5px; border-radius:9px;
+    background:var(--brand); color:var(--hero-ink); font-size:11px; font-weight:700;
+  }
+  .toolbar-meta{ margin-top:12px; }
+  .count{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; color:var(--ink-faint); }
+
+  .filters{
+    display:flex; flex-direction:column; gap:12px; margin-top:12px;
+    background:var(--surface); border:1px solid var(--border); border-radius:11px;
+    padding:16px; box-shadow:var(--shadow);
+  }
   .filter-row{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; }
   .fgroup{ display:flex; gap:6px; flex-wrap:wrap; }
   .pill{
-    font-family:"IBM Plex Mono", monospace; font-size:12px;
+    font-family:"IBM Plex Mono", monospace; font-size:12.5px;
     border:1px solid var(--border); background:var(--surface); color:var(--ink-muted);
     border-radius:20px; padding:7px 13px; display:flex; align-items:center; gap:6px;
     transition:border-color .15s, color .15s, background .15s;
@@ -196,8 +223,6 @@
   .pill[aria-pressed="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
   .pill .n{ opacity:.6; }
   .pill .swatch{ width:7px; height:7px; border-radius:50%; }
-  .spacer{ flex:1; }
-  .count{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; color:var(--ink-faint); }
 
   /* ---------- results ---------- */
   .results{ max-width:980px; margin:20px auto 90px; padding:0 clamp(20px,4vw,48px); }
@@ -299,6 +324,12 @@
     .job{ grid-template-columns:auto 1fr; }
     .job-go{ display:none; }
   }
+
+  @media (min-width:1100px){
+    .job{ padding:22px 28px; gap:20px; }
+    .job-title{ font-size:19px; }
+    .job-summary{ font-size:15px; padding:12px 15px; }
+  }
 </style>
 </head>
 <body>
@@ -360,12 +391,23 @@
 </div>
 
 <div class="toolbar" id="results">
-  <label class="searchbar">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="search" type="text" placeholder="Chercher un mot-clé, une techno (ex: React, DevOps, Java), entreprise…" autocomplete="off">
-    <span class="kbd">/</span>
-  </label>
-  <div class="filters">
+  <div class="toolbar-row">
+    <label class="searchbar">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="text" placeholder="Chercher un mot-clé, une techno (ex: React, DevOps, Java), entreprise…" autocomplete="off">
+      <span class="kbd">/</span>
+    </label>
+    <button class="filter-toggle" id="filter-toggle" type="button" aria-expanded="false" aria-controls="filters-panel">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      <span>Filtres</span>
+      <span class="filter-badge" id="filter-badge" hidden>0</span>
+      <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+  </div>
+  <div class="toolbar-meta">
+    <span class="count"><span id="result-count">%%JOBS_COUNT%%</span> résultat(s)</span>
+  </div>
+  <div class="filters" id="filters-panel" hidden>
     <div class="filter-row">
       <div class="fgroup" id="filter-category" role="group" aria-label="Catégorie IA"></div>
     </div>
@@ -373,8 +415,6 @@
       <div class="fgroup" id="filter-type" role="group" aria-label="Type de contrat"></div>
       <div class="fgroup" id="filter-source" role="group" aria-label="Source"></div>
       <button class="pill" id="filter-fav" aria-pressed="false">★ Favoris</button>
-      <div class="spacer"></div>
-      <span class="count"><span id="result-count">%%JOBS_COUNT%%</span> résultat(s)</span>
     </div>
   </div>
 </div>
@@ -649,26 +689,46 @@
     }
   });
 
+  var filterToggle = document.getElementById("filter-toggle");
+  var filtersPanel = document.getElementById("filters-panel");
+  filterToggle.addEventListener("click", function(){
+    var willOpen = filtersPanel.hidden;
+    filtersPanel.hidden = !willOpen;
+    filterToggle.setAttribute("aria-expanded", String(willOpen));
+  });
+
+  var filterBadge = document.getElementById("filter-badge");
+  function updateFilterBadge(){
+    var active = (state.category !== "all" ? 1 : 0) +
+      (state.type !== "all" ? 1 : 0) +
+      (state.source !== "all" ? 1 : 0) +
+      (state.favOnly ? 1 : 0);
+    filterBadge.textContent = String(active);
+    filterBadge.hidden = active === 0;
+  }
+
   var favToggle = document.getElementById("filter-fav");
   favToggle.addEventListener("click", function(){
     state.favOnly = !state.favOnly;
     favToggle.setAttribute("aria-pressed", String(state.favOnly));
+    updateFilterBadge();
     render();
   });
 
   function refreshFilters(){
     renderFilterGroup(document.getElementById("filter-category"), "category", categoryLabels, state.category, function(key){
-      state.category = key; refreshFilters(); render();
+      state.category = key; refreshFilters(); updateFilterBadge(); render();
     });
     renderFilterGroup(document.getElementById("filter-type"), "contract_type", typeLabels, state.type, function(key){
-      state.type = key; refreshFilters(); render();
+      state.type = key; refreshFilters(); updateFilterBadge(); render();
     });
     renderFilterGroup(document.getElementById("filter-source"), "source", sourceLabels, state.source, function(key){
-      state.source = key; refreshFilters(); render();
+      state.source = key; refreshFilters(); updateFilterBadge(); render();
     });
   }
 
   refreshFilters();
+  updateFilterBadge();
   render();
 
   var companies = Array.from(new Set(jobs.map(function(j){ return j.company; })));
