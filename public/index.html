@@ -11,8 +11,8 @@
     --surface:#ffffff;
     --surface-2:#f6ecdc;
     --ink:#2b1b10;
-    --ink-muted:#7a6552;
-    --ink-faint:#a6927b;
+    --ink-muted:#67503c;
+    --ink-faint:#8f7a63;
     --border:#efe2c9;
     --brand:#c1572b;
     --brand-soft:#f3ded0;
@@ -32,7 +32,7 @@
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#1c130c; --surface:#241a10; --surface-2:#2c2013;
-      --ink:#f3e9dc; --ink-muted:#b9a68e; --ink-faint:#7d6c58;
+      --ink:#f3e9dc; --ink-muted:#c8b79d; --ink-faint:#93816a;
       --border:#3a2c1c;
       --brand:#f0855a; --brand-soft:#3a2013;
       --gold:#ffc46b; --gold-soft:#3a2c10;
@@ -220,30 +220,30 @@
   .fav-btn[aria-pressed="true"]{ color:var(--gold); border-color:color-mix(in srgb, var(--gold) 45%, var(--border)); background:var(--gold-soft); }
   .fav-btn svg{ width:16px; height:16px; }
 
-  .job-title{ font-size:16px; font-weight:700; margin:0 0 4px; letter-spacing:-.005em; }
+  .job-title{ font-size:17.5px; line-height:1.35; font-weight:700; margin:0 0 6px; letter-spacing:-.005em; }
   .job-meta{
-    font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--ink-muted);
+    font-family:"IBM Plex Mono", monospace; font-size:12.5px; line-height:1.6; color:var(--ink-muted);
     margin:0 0 10px; display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center;
   }
   .job-meta .sep{ color:var(--ink-faint); }
-  
+
   .job-summary{
-    font-size:13.5px; line-height:1.55; color:var(--ink);
-    margin:0 0 12px; background:var(--surface-2); padding:10px 12px; border-radius:8px;
+    font-size:14.5px; line-height:1.6; color:var(--ink);
+    margin:0 0 12px; background:var(--surface-2); padding:11px 13px; border-radius:8px;
     border-left:3px solid var(--brand);
   }
 
   .skills-wrap{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
   .skills-wrap.modal{ margin-bottom:18px; }
   .skill-tag{
-    font-family:"IBM Plex Mono", monospace; font-size:11px;
+    font-family:"IBM Plex Mono", monospace; font-size:11.5px;
     background:color-mix(in srgb, var(--ink) 6%, transparent);
-    color:var(--ink); padding:2px 8px; border-radius:4px; border:1px solid var(--border);
+    color:var(--ink); padding:3px 9px; border-radius:4px; border:1px solid var(--border);
   }
 
   .badge{
-    font-family:"IBM Plex Mono", monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
-    padding:2.5px 8px; border-radius:5px; display:inline-flex; align-items:center; gap:5px; font-weight:700;
+    font-family:"IBM Plex Mono", monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    padding:3px 9px; border-radius:5px; display:inline-flex; align-items:center; gap:5px; font-weight:700;
   }
   .badge.freelance{ background:var(--brand-soft); color:var(--brand); }
   .badge.contract{ background:var(--plum-soft); color:var(--plum); }
@@ -280,10 +280,10 @@
     background:var(--surface-2); border-left:4px solid var(--teal);
     padding:12px 16px; border-radius:6px; margin-bottom:16px;
   }
-  .modal-ai-title{ font-family:"IBM Plex Mono", monospace; font-size:11px; text-transform:uppercase; color:var(--teal); font-weight:700; margin:0 0 4px; }
-  .modal-ai-summary{ font-size:14px; line-height:1.6; margin:0; }
-  .modal-body p{ font-size:14px; line-height:1.7; color:var(--ink-muted); white-space:pre-line; margin:0 0 14px; }
-  .modal-section-title{ margin:16px 0 8px; font-size:13px; color:var(--ink-faint); text-transform:uppercase; }
+  .modal-ai-title{ font-family:"IBM Plex Mono", monospace; font-size:11.5px; text-transform:uppercase; color:var(--teal); font-weight:700; margin:0 0 5px; }
+  .modal-ai-summary{ font-size:15px; line-height:1.65; margin:0; }
+  .modal-body p{ font-size:15px; line-height:1.75; color:var(--ink-muted); white-space:pre-line; margin:0 0 14px; }
+  .modal-section-title{ margin:18px 0 9px; font-size:13px; font-weight:600; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; }
   .modal-foot{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 24px 22px; border-top:1px solid var(--border); }
   .btn-primary{ background:var(--ink); color:var(--bg); }
   .btn-ghost{ border-color:var(--border); color:var(--ink-muted); background:transparent; }
