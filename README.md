@@ -5,6 +5,8 @@ Petit pipeline qui collecte des offres freelance/contract dans la tech en Europe
 - une **interface web** consultable dans un navigateur (recherche, filtres, favoris) ;
 - un **serveur MCP** interrogeable par un assistant IA (Claude, etc.) via deux outils : `search_jobs` et `get_job`.
 
+**Serveur MCP déployé :** https://mcp-tech-jobs.onrender.com (endpoint MCP : `POST /mcp`)
+
 ## Comment ça marche
 
 Le projet fonctionne en 3 étapes indépendantes, chacune avec son propre script :
