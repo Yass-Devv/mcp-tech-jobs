@@ -234,6 +234,7 @@
   }
 
   .skills-wrap{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .skills-wrap.modal{ margin-bottom:18px; }
   .skill-tag{
     font-family:"IBM Plex Mono", monospace; font-size:11px;
     background:color-mix(in srgb, var(--ink) 6%, transparent);
@@ -282,6 +283,7 @@
   .modal-ai-title{ font-family:"IBM Plex Mono", monospace; font-size:11px; text-transform:uppercase; color:var(--teal); font-weight:700; margin:0 0 4px; }
   .modal-ai-summary{ font-size:14px; line-height:1.6; margin:0; }
   .modal-body p{ font-size:14px; line-height:1.7; color:var(--ink-muted); white-space:pre-line; margin:0 0 14px; }
+  .modal-section-title{ margin:16px 0 8px; font-size:13px; color:var(--ink-faint); text-transform:uppercase; }
   .modal-foot{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 24px 22px; border-top:1px solid var(--border); }
   .btn-primary{ background:var(--ink); color:var(--bg); }
   .btn-ghost{ border-color:var(--border); color:var(--ink-muted); background:transparent; }
@@ -401,8 +403,8 @@
       <div class="modal-ai-title">🤖 Synthèse IA</div>
       <p class="modal-ai-summary" id="modal-summary"></p>
     </div>
-    <div class="skills-wrap" id="modal-skills" style="margin-bottom:18px;"></div>
-    <h4 style="margin:16px 0 8px; font-size:13px; color:var(--ink-faint); text-transform:uppercase;">Description originale</h4>
+    <div class="skills-wrap modal" id="modal-skills"></div>
+    <h4 class="modal-section-title">Description originale</h4>
     <p id="modal-desc"></p>
   </div>
   <div class="modal-foot">

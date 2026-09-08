@@ -166,9 +166,7 @@ async function main(): Promise<void> {
     const outputPath = path.join(process.cwd(), "data", "structured_jobs.json");
 
     const rawData = JSON.parse(fs.readFileSync(inputPath, "utf-8"));
-    const allJobs = z.array(RawJobSchema).parse(rawData);
-
-    const jobs = allJobs;
+    const jobs = z.array(RawJobSchema).parse(rawData);
 
     console.log(`🔄 Structuration de ${jobs.length} offres via ${MODEL}...`);
 

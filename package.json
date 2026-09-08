@@ -1,8 +1,8 @@
 {
   "name": "mcp-tech-jobs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Agrégateur d'offres freelance tech (EURES + Arbeitnow) enrichies par IA, exposé via un serveur MCP et une interface web.",
+  "main": "dist/mcp_server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fetch": "tsx src/fetch_raw.ts",
